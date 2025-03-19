@@ -1,0 +1,11 @@
+Task,Age,Gender,Happy-PRE,Stimulated-PRE,Controlled-PRE,Happy-POST,Stimulated-POST,Controlled-POST
+Non-critical,26,Man,1,8,2,1,9,2
+Critical,25,Man,5,4,6,4,3,6
+Non-critical,27,Man,2,4,5,1,5,5
+Critical,32,Man,5,2,7,6,4,7
+Non-critical,27,Woman,3,2,4,4,3,3
+Non-critical,24,Woman,5,3,4,5,2,6
+Critical,19,Woman,4,5,7,3,3,7
+Non-critical,24,Man,2,8,5,2,8,5
+Critical,24,Woman,2,5,8,1,5,5
+Critical,28,Man,7,6,5,7,6,5
