@@ -1,8 +1,182 @@
 ```{r}
 
-data_path <- ""
+# Load libs
+library(tidyr)
+library(dplyr)
+
+# Load data and add ids
+data_path <- "/Users/adrian/Developer/academic/hcde-quant/544-quant-project/microvolunteering.csv"
 data <- read.csv(data_path, header = TRUE)
+data$Participant <- seq_len(nrow(data)) 
 
+### Wilcoxon Ranked-Sign Test ### 
 
+happy_critical_test <- wilcox.test(
+  subset(data, Task == "Critical")$Happy.POST,
+  subset(data, Task == "Critical")$Happy.PRE,
+  paired = TRUE,
+  exact = FALSE
+)
+happy_noncritical_test <- wilcox.test(
+  subset(data, Task == "Non-critical")$Happy.POST,
+  subset(data, Task == "Non-critical")$Happy.PRE,
+  paired = TRUE,
+  exact = FALSE
+)
+stim_critical_test <- wilcox.test(
+  subset(data, Task == "Critical")$Stimulated.POST,
+  subset(data, Task == "Critical")$Stimulated.PRE,
+  paired = TRUE,
+  exact = FALSE
+)
+stim_noncritical_test <- wilcox.test(
+  subset(data, Task == "Non-critical")$Stimulated.POST,
+  subset(data, Task == "Non-critical")$Stimulated.PRE,
+  paired = TRUE,
+  exact = FALSE
+)
+controlled_critical_test <- wilcox.test(
+  subset(data, Task == "Critical")$Stimulated.POST,
+  subset(data, Task == "Critical")$Stimulated.PRE,
+  paired = TRUE,
+  exact = FALSE
+)
+controlled_noncritical_test <- wilcox.test(
+  subset(data, Task == "Non-critical")$Stimulated.POST,
+  subset(data, Task == "Non-critical")$Stimulated.PRE,
+  paired = TRUE,
+  exact = FALSE
+)
+
+### Mann-Whitney U Test ### 
+
+# Compute (post - pre) mood changes for each of the three
+# affect dimensions and add a column for each to the data frame
+data <- data %>%
+  mutate(
+    Happy.DIFF = Happy.POST - Happy.PRE,
+    Stimulated.DIFF = Stimulated.POST - Stimulated.PRE,
+    Controlled.DIFF = Controlled.POST - Controlled.PRE
+  )
+
+# Create data frames for "critical" and "non-critical" groups
+noncritcal_group <- subset(data, Task == "Non-critical")
+critical_group <- subset(data, Task == "Critical")
+
+# Perform Mann-Whitney U tests for changes in 
+# each affect dimension
+happy_test <- wilcox.test(
+  noncritcal_group$Happy.DIFF, 
+  critical_group$Happy.DIFF, 
+  paired = FALSE,
+  exact = FALSE
+)
+stimulated_test <- wilcox.test(
+  noncritcal_group$Stimulated.DIFF,
+  critical_group$Stimulated.DIFF,
+  paired = FALSE,
+  exact = FALSE
+)
+controlled_test <- wilcox.test(
+  noncritcal_group$Controlled.DIFF,
+  critical_group$Controlled.DIFF,
+  paired = FALSE,
+  exact = FALSE
+)
 ```
+
+WILCOXON RANKED-SIGN TEST RESULTS
+
+Happy Critical Test
+```{r}
+print(happy_critical_test)
+```
+
+Happy Non-critical Test
+```{r}
+print(happy_noncritical_test)
+```
+
+Stimulated Critical Test
+
+```{r}
+print(stim_critical_test)
+```
+
+Stimulated Non-critical Test
+
+```{r}
+print(stim_noncritical_test)
+```
+
+Controlled Critical Test
+
+```{r}
+print(controlled_critical_test)
+```
+
+Controlled Non-critical Test
+
+```{r}
+print(controlled_noncritical_test)
+```
+
+MANN-WHITNES U TEST 
+
+Happy Test
+
+```{r}
+print(happy_test)
+```
+
+Stimulated Test
+
+```{r}
+print(stimulated_test)
+```
+
+Controlled Test
+
+```{r}
+print(controlled_test)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
