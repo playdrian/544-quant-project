@@ -352,7 +352,9 @@ display: none;
 </div>
 
 
-<pre class="r"><code># Load libs
+<div id="statistical-analyses" class="section level1">
+<h1>Statistical Analyses</h1>
+<pre class="r"><code># Load libraries
 library(tidyr)
 library(dplyr)</code></pre>
 <pre><code>## 
@@ -363,12 +365,13 @@ library(dplyr)</code></pre>
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code># Load data and add ids
-data_path &lt;- &quot;/Users/adrian/Developer/academic/hcde-quant/544-quant-project/microvolunteering.csv&quot;
+<pre class="r"><code># Load data and add IDs
+data_path &lt;- &quot;microvolunteering.csv&quot;
 data &lt;- read.csv(data_path, header = TRUE)
-data$Participant &lt;- seq_len(nrow(data)) 
-
-### Wilcoxon Ranked-Sign Test ### 
+data$Participant &lt;- seq_len(nrow(data)) </code></pre>
+<div id="inferential-statistical-tests" class="section level2">
+<h2>Inferential Statistical Tests</h2>
+<pre class="r"><code>### Wilcoxon Ranked-Sign Test ### 
 
 happy_critical_test &lt;- wilcox.test(
   subset(data, Task == &quot;Critical&quot;)$Happy.POST,
@@ -395,22 +398,22 @@ stim_noncritical_test &lt;- wilcox.test(
   exact = FALSE
 )
 controlled_critical_test &lt;- wilcox.test(
-  subset(data, Task == &quot;Critical&quot;)$Stimulated.POST,
-  subset(data, Task == &quot;Critical&quot;)$Stimulated.PRE,
+  subset(data, Task == &quot;Critical&quot;)$Controlled.POST,
+  subset(data, Task == &quot;Critical&quot;)$Controlled.PRE,
   paired = TRUE,
   exact = FALSE
 )
 controlled_noncritical_test &lt;- wilcox.test(
-  subset(data, Task == &quot;Non-critical&quot;)$Stimulated.POST,
-  subset(data, Task == &quot;Non-critical&quot;)$Stimulated.PRE,
+  subset(data, Task == &quot;Non-critical&quot;)$Controlled.POST,
+  subset(data, Task == &quot;Non-critical&quot;)$Controlled.PRE,
   paired = TRUE,
   exact = FALSE
 )
 
 ### Mann-Whitney U Test ### 
 
-# Compute (post - pre) mood changes for each of the three
-# affect dimensions and add a column for each to the data frame
+# Compute (post - pre) mood changes for each of the three affect dimensions 
+# and add a column for each to the data frame
 data &lt;- data %&gt;%
   mutate(
     Happy.DIFF = Happy.POST - Happy.PRE,
@@ -419,30 +422,30 @@ data &lt;- data %&gt;%
   )
 
 # Create data frames for &quot;critical&quot; and &quot;non-critical&quot; groups
-noncritcal_group &lt;- subset(data, Task == &quot;Non-critical&quot;)
+noncritical_group &lt;- subset(data, Task == &quot;Non-critical&quot;)
 critical_group &lt;- subset(data, Task == &quot;Critical&quot;)
 
-# Perform Mann-Whitney U tests for changes in 
-# each affect dimension
+# Perform Mann-Whitney U tests for changes in each affect dimension
 happy_test &lt;- wilcox.test(
-  noncritcal_group$Happy.DIFF, 
+  noncritical_group$Happy.DIFF, 
   critical_group$Happy.DIFF, 
   paired = FALSE,
   exact = FALSE
 )
 stimulated_test &lt;- wilcox.test(
-  noncritcal_group$Stimulated.DIFF,
+  noncritical_group$Stimulated.DIFF,
   critical_group$Stimulated.DIFF,
   paired = FALSE,
   exact = FALSE
 )
 controlled_test &lt;- wilcox.test(
-  noncritcal_group$Controlled.DIFF,
+  noncritical_group$Controlled.DIFF,
   critical_group$Controlled.DIFF,
   paired = FALSE,
   exact = FALSE
 )</code></pre>
-<p>WILCOXON RANKED-SIGN TEST RESULTS</p>
+<div id="wilcoxon-ranked-sign-test-results" class="section level3">
+<h3>WILCOXON RANKED-SIGN TEST RESULTS</h3>
 <p>Happy Critical Test</p>
 <pre class="r"><code>print(happy_critical_test)</code></pre>
 <pre><code>## 
@@ -480,24 +483,26 @@ controlled_test &lt;- wilcox.test(
 <pre><code>## 
 ##  Wilcoxon signed rank test with continuity correction
 ## 
-## data:  subset(data, Task == &quot;Critical&quot;)$Stimulated.POST and subset(data, Task == &quot;Critical&quot;)$Stimulated.PRE
-## V = 2.5, p-value = 1
+## data:  subset(data, Task == &quot;Critical&quot;)$Controlled.POST and subset(data, Task == &quot;Critical&quot;)$Controlled.PRE
+## V = 0, p-value = 1
 ## alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p>Controlled Non-critical Test</p>
 <pre class="r"><code>print(controlled_noncritical_test)</code></pre>
 <pre><code>## 
 ##  Wilcoxon signed rank test with continuity correction
 ## 
-## data:  subset(data, Task == &quot;Non-critical&quot;)$Stimulated.POST and subset(data, Task == &quot;Non-critical&quot;)$Stimulated.PRE
-## V = 7.5, p-value = 0.4237
+## data:  subset(data, Task == &quot;Non-critical&quot;)$Controlled.POST and subset(data, Task == &quot;Non-critical&quot;)$Controlled.PRE
+## V = 2, p-value = 1
 ## alternative hypothesis: true location shift is not equal to 0</code></pre>
-<p>MANN-WHITNES U TEST</p>
+</div>
+<div id="mann-whitney-u-test-results" class="section level3">
+<h3>MANN-WHITNEY U TEST RESULTS</h3>
 <p>Happy Test</p>
 <pre class="r"><code>print(happy_test)</code></pre>
 <pre><code>## 
 ##  Wilcoxon rank sum test with continuity correction
 ## 
-## data:  noncritcal_group$Happy.DIFF and critical_group$Happy.DIFF
+## data:  noncritical_group$Happy.DIFF and critical_group$Happy.DIFF
 ## W = 16.5, p-value = 0.4338
 ## alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p>Stimulated Test</p>
@@ -505,7 +510,7 @@ controlled_test &lt;- wilcox.test(
 <pre><code>## 
 ##  Wilcoxon rank sum test with continuity correction
 ## 
-## data:  noncritcal_group$Stimulated.DIFF and critical_group$Stimulated.DIFF
+## data:  noncritical_group$Stimulated.DIFF and critical_group$Stimulated.DIFF
 ## W = 16.5, p-value = 0.4521
 ## alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p>Controlled Test</p>
@@ -513,9 +518,119 @@ controlled_test &lt;- wilcox.test(
 <pre><code>## 
 ##  Wilcoxon rank sum test with continuity correction
 ## 
-## data:  noncritcal_group$Controlled.DIFF and critical_group$Controlled.DIFF
+## data:  noncritical_group$Controlled.DIFF and critical_group$Controlled.DIFF
 ## W = 15, p-value = 0.6072
 ## alternative hypothesis: true location shift is not equal to 0</code></pre>
+</div>
+</div>
+<div id="descriptive-statistics" class="section level2">
+<h2>Descriptive Statistics</h2>
+<pre class="r"><code># Create vectors to store values for table creation
+critical_pre_post &lt;- c()
+noncritical_pre_post &lt;- c()
+critical_diff &lt;- c()
+noncritical_diff &lt;- c()</code></pre>
+<div id="mean" class="section level3">
+<h3>Mean</h3>
+<p>Happy</p>
+<pre class="r"><code>happy_critical_diff_mean &lt;- 
+  mean(subset(data, Task == &quot;Critical&quot;)$Happy.POST) - mean(subset(data, Task == &quot;Critical&quot;)$Happy.PRE)
+print(happy_critical_diff_mean)</code></pre>
+<pre><code>## [1] -0.4</code></pre>
+<pre class="r"><code>happy_noncritical_diff_mean &lt;- 
+  mean(subset(data, Task == &quot;Non-critical&quot;)$Happy.POST) - mean(subset(data, Task == &quot;Non-critical&quot;)$Happy.PRE)
+print(happy_noncritical_diff_mean)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code># Assign values to vectors to create table
+critical_pre_post[1] = mean(subset(data, Task == &quot;Critical&quot;)$Happy.PRE)
+critical_pre_post[4] = mean(subset(data, Task == &quot;Critical&quot;)$Happy.POST)
+noncritical_pre_post[1] = mean(subset(data, Task == &quot;Non-critical&quot;)$Happy.PRE)
+noncritical_pre_post[4] = mean(subset(data, Task == &quot;Non-critical&quot;)$Happy.POST)
+critical_diff[1] = happy_critical_diff_mean
+noncritical_diff[1] = happy_noncritical_diff_mean</code></pre>
+<p>Stimulated</p>
+<pre class="r"><code>stim_critical_diff_mean &lt;- 
+  mean(subset(data, Task == &quot;Critical&quot;)$Stimulated.POST) - mean(subset(data, Task == &quot;Critical&quot;)$Stimulated.PRE)
+print(stim_critical_diff_mean)</code></pre>
+<pre><code>## [1] -0.2</code></pre>
+<pre class="r"><code>stim_noncritical_diff_mean &lt;- 
+  mean(subset(data, Task == &quot;Non-critical&quot;)$Stimulated.POST) - mean(subset(data, Task == &quot;Non-critical&quot;)$Stimulated.PRE)
+print(stim_noncritical_diff_mean)</code></pre>
+<pre><code>## [1] 0.4</code></pre>
+<pre class="r"><code># Assign values to vectors to create table
+critical_pre_post[2] = mean(subset(data, Task == &quot;Critical&quot;)$Stimulated.PRE)
+critical_pre_post[5] = mean(subset(data, Task == &quot;Critical&quot;)$Stimulated.POST)
+noncritical_pre_post[2] = mean(subset(data, Task == &quot;Non-critical&quot;)$Stimulated.PRE)
+noncritical_pre_post[5] = mean(subset(data, Task == &quot;Non-critical&quot;)$Stimulated.POST)
+critical_diff[2] = stim_critical_diff_mean
+noncritical_diff[2] = stim_noncritical_diff_mean</code></pre>
+<p>Controlled</p>
+<pre class="r"><code>cont_critical_diff_mean &lt;- 
+  mean(subset(data, Task == &quot;Critical&quot;)$Controlled.POST) - mean(subset(data, Task == &quot;Critical&quot;)$Controlled.PRE)
+print(cont_critical_diff_mean)</code></pre>
+<pre><code>## [1] -0.6</code></pre>
+<pre class="r"><code>cont_noncritical_diff_mean &lt;- 
+  mean(subset(data, Task == &quot;Non-critical&quot;)$Controlled.POST) - mean(subset(data, Task == &quot;Non-critical&quot;)$Controlled.PRE)
+print(cont_noncritical_diff_mean)</code></pre>
+<pre><code>## [1] 0.2</code></pre>
+<pre class="r"><code># Assign values to vectors to create table
+critical_pre_post[3] = mean(subset(data, Task == &quot;Critical&quot;)$Controlled.PRE)
+critical_pre_post[6] = mean(subset(data, Task == &quot;Critical&quot;)$Controlled.POST)
+noncritical_pre_post[3] = mean(subset(data, Task == &quot;Non-critical&quot;)$Controlled.PRE)
+noncritical_pre_post[6] = mean(subset(data, Task == &quot;Non-critical&quot;)$Controlled.POST)
+critical_diff[3] = cont_critical_diff_mean
+noncritical_diff[3] = cont_noncritical_diff_mean</code></pre>
+<pre class="r"><code>## Create table to display these values
+mean_sam &lt;- data.frame(critical_pre_post, noncritical_pre_post)
+row.names(mean_sam) &lt;- c(&#39;Happy.PRE&#39;, &#39;Stimulated.PRE&#39;, &#39;Dominance.PRE&#39;, &#39;Happy.POST&#39;, &#39;Stimulated.POST&#39;, &#39;Dominance.POST&#39;)
+mean_sam</code></pre>
+<pre><code>##                 critical_pre_post noncritical_pre_post
+## Happy.PRE                     4.6                  2.6
+## Stimulated.PRE                4.4                  5.0
+## Dominance.PRE                 6.6                  4.0
+## Happy.POST                    4.2                  2.6
+## Stimulated.POST               4.2                  5.4
+## Dominance.POST                6.0                  4.2</code></pre>
+<pre class="r"><code>mean_diff_sam &lt;- data.frame(critical_diff, noncritical_diff)
+row.names(mean_diff_sam) &lt;- c(&#39;Happy&#39;, &#39;Stimulated&#39;, &#39;Dominance&#39;)
+mean_diff_sam</code></pre>
+<pre><code>##            critical_diff noncritical_diff
+## Happy               -0.4              0.0
+## Stimulated          -0.2              0.4
+## Dominance           -0.6              0.2</code></pre>
+</div>
+<div id="median" class="section level3">
+<h3>Median</h3>
+<p>Happy</p>
+<pre class="r"><code>happy_critical_diff_median &lt;- 
+  median(subset(data, Task == &quot;Critical&quot;)$Happy.POST) - median(subset(data, Task == &quot;Critical&quot;)$Happy.PRE)
+print(happy_critical_diff_median)</code></pre>
+<pre><code>## [1] -1</code></pre>
+<pre class="r"><code>happy_noncritical_diff_median &lt;- 
+  median(subset(data, Task == &quot;Non-critical&quot;)$Happy.POST) - median(subset(data, Task == &quot;Non-critical&quot;)$Happy.PRE)
+print(happy_noncritical_diff_median)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>Stimulated</p>
+<pre class="r"><code>stim_critical_diff_median &lt;- 
+  median(subset(data, Task == &quot;Critical&quot;)$Stimulated.POST) - median(subset(data, Task == &quot;Critical&quot;)$Stimulated.PRE)
+print(stim_critical_diff_median)</code></pre>
+<pre><code>## [1] -1</code></pre>
+<pre class="r"><code>stim_noncritical_diff_median &lt;- 
+  median(subset(data, Task == &quot;Non-critical&quot;)$Stimulated.POST) - median(subset(data, Task == &quot;Non-critical&quot;)$Stimulated.PRE)
+print(stim_noncritical_diff_median)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>Controlled</p>
+<pre class="r"><code>cont_critical_diff_median &lt;- 
+  median(subset(data, Task == &quot;Critical&quot;)$Controlled.POST) - median(subset(data, Task == &quot;Critical&quot;)$Controlled.PRE)
+print(cont_critical_diff_median)</code></pre>
+<pre><code>## [1] -1</code></pre>
+<pre class="r"><code>cont_noncritical_diff_median &lt;- 
+  median(subset(data, Task == &quot;Non-critical&quot;)$Controlled.POST) - median(subset(data, Task == &quot;Non-critical&quot;)$Controlled.PRE)
+print(cont_noncritical_diff_median)</code></pre>
+<pre><code>## [1] 1</code></pre>
+</div>
+</div>
+</div>
 
 
 
