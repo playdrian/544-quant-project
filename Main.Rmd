@@ -242,7 +242,7 @@ library(ggplot2)
 
 # Create a data frame for the plot using your calculated mean differences
 plot_data <- data.frame(
-  Dimension = rep(c("Valence", "Relaxation", "Dominance"), each = 2),
+  Dimension = rep(c("Valence", "Arousal", "Dominance"), each = 2),
   Task = rep(c("Critical Task", "Non-critical Task"), times = 3),
   Value = c(
     happy_critical_diff_mean, happy_noncritical_diff_mean,
