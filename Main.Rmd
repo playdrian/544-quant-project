@@ -231,6 +231,45 @@ row.names(mean_diff_sam) <- c('Happy', 'Stimulated', 'Dominance')
 mean_diff_sam
 ```
 
+### Visualize changes 
+
+```{r}
+
+# Citation: I generated the visualization code below with GPT 4.5
+
+# Load ggplot2 library
+library(ggplot2)
+
+# Create a data frame for the plot using your calculated mean differences
+plot_data <- data.frame(
+  Dimension = rep(c("Valence", "Relaxation", "Dominance"), each = 2),
+  Task = rep(c("Critical Task", "Non-critical Task"), times = 3),
+  Value = c(
+    happy_critical_diff_mean, happy_noncritical_diff_mean,
+    stim_critical_diff_mean, stim_noncritical_diff_mean,
+    cont_critical_diff_mean, cont_noncritical_diff_mean
+  )
+)
+
+# Generate the grouped bar chart
+ggplot(plot_data, aes(x = Dimension, y = Value, fill = Task)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.6) +
+  scale_fill_manual(values = c("Critical Task" = "#FF9999", "Non-critical Task" = "#99CCFF")) +
+  theme_minimal() +
+  labs(
+    title = "Mean Change in Emotional States by Task Type",
+    x = "Dimension",
+    y = "Mean Change (Post - Pre)",
+    fill = "Task Type"
+  ) +
+  ylim(-1, 1) +
+  geom_hline(yintercept = 0, color = "black", linewidth = 0.5) +
+  theme(
+    text = element_text(size = 14),
+    plot.title = element_text(hjust = 0.5, face = "bold")
+  )
+```
+
 
 ### Median
 
